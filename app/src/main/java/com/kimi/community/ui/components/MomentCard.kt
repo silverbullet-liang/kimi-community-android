@@ -44,7 +44,11 @@ fun MomentCard(
     val likeCount = (moment.stat?.likeNum ?: 0).coerceAtLeast(0)
     val isFavorited = moment.interactionStatus?.isCollected ?: false
     // chatShareCard 是 Moment 顶层字段（Kimi_API_zh.md 附录 A）
-    val previewUrl = moment.chatShareCard?.htmlFile?.cdnUrl
+    val cdnUrl = moment.chatShareCard?.htmlFile?.cdnUrl
+    val chatShareId = moment.content?.chatShareId
+    val shareUrl = if (chatShareId != null) "https://www.kimi.com/chat/share/$chatShareId" else null
+    val previewUrl = cdnUrl ?: shareUrl
+    val cardImages = moment.chatShareCard?.imageList ?: moment.content?.media?.images
     val title = moment.content?.title ?: moment.chatShareCard?.notice ?: "作品"
 
     Card(
@@ -127,14 +131,53 @@ fun MomentCard(
                 }
             }
 
-            // 作品预览 WebView（1:1 正方形）
-            previewUrl?.let { url ->
-                MomentPreview(
-                    url = url,
-                    title = title,
-                    onClick = onClick
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+            // 作品预览（WebView 或图片，1:1 正方形）
+            when {
+                previewUrl != null -> {
+                    MomentPreview(
+                        url = previewUrl,
+                        title = title,
+                        onClick = onClick
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                !cardImages.isNullOrEmpty() -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                    ) {
+                        if (cardImages.size == 1) {
+                            AsyncImage(
+                                model = cardImages[0].url ?: cardImages[0].originUrl,
+                                contentDescription = "作品图片",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Fit
+                            )
+                        } else {
+                            // 多图展示第一张 + 角标
+                            AsyncImage(
+                                model = cardImages[0].url ?: cardImages[0].originUrl,
+                                contentDescription = "作品图片",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Fit
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(8.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.Black.copy(alpha = 0.6f))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text("${cardImages.size}图", color = Color.White, fontSize = 11.sp)
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
 
             // 操作栏

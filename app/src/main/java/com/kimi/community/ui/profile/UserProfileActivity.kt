@@ -60,6 +60,7 @@ fun UserProfileScreen(
     val isFollowing by viewModel.isFollowing.collectAsState()
     val isSelf by viewModel.isSelf.collectAsState()
     val isBlocked by viewModel.isBlocked.collectAsState()
+    val isLoadingMore by viewModel.isLoadingMore.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
     var showMenu by remember { mutableStateOf(false) }
     var showReportDialog by remember { mutableStateOf(false) }
@@ -184,6 +185,16 @@ fun UserProfileScreen(
                                 onLike = { viewModel.toggleLike(moment) },
                                 onFavorite = { viewModel.toggleFavorite(moment) }
                             )
+                        }
+                        if (isLoadingMore) {
+                            item {
+                                Box(
+                                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                                }
+                            }
                         }
                     } else {
                         item {

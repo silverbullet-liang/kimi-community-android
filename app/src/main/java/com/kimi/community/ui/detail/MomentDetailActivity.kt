@@ -350,7 +350,15 @@ fun MomentDetailPreview(moment: Moment?) {
                 com.kimi.community.ui.components.MomentPreview(
                     url = cdnUrl,
                     title = moment?.content?.title ?: "作品预览",
-                    onClick = { }
+                    onClick = {
+                        fullscreenUrl?.let { url ->
+                            context.startActivity(
+                                Intent(context, WebViewActivity::class.java)
+                                    .putExtra("url", url)
+                                    .putExtra("title", moment?.content?.title ?: "作品预览")
+                            )
+                        }
+                    }
                 )
             }
             // 2. 会话享链接 → 内嵌 WebView
@@ -358,7 +366,15 @@ fun MomentDetailPreview(moment: Moment?) {
                 com.kimi.community.ui.components.MomentPreview(
                     url = shareUrl,
                     title = moment?.content?.title ?: "会话分享",
-                    onClick = { }
+                    onClick = {
+                        fullscreenUrl?.let { url ->
+                            context.startActivity(
+                                Intent(context, WebViewActivity::class.java)
+                                    .putExtra("url", url)
+                                    .putExtra("title", moment?.content?.title ?: "会话分享")
+                            )
+                        }
+                    }
                 )
             }
             // 3. 图片列表 → 单图或多图横滑
@@ -369,7 +385,7 @@ fun MomentDetailPreview(moment: Moment?) {
                         model = images[0].url ?: images[0].originUrl,
                         contentDescription = "作品图片",
                         modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Fit
                     )
                 } else {
                     // 多张图片 → HorizontalPager 横滑
@@ -383,7 +399,7 @@ fun MomentDetailPreview(moment: Moment?) {
                                 model = images[page].url ?: images[page].originUrl,
                                 contentDescription = "作品图片 ${page + 1}",
                                 modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Fit
                             )
                         }
                         // 页码指示器

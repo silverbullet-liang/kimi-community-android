@@ -44,6 +44,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private var pageToken: String? = null
     private var isLastPage = false
+    private val _isLoadingMore = MutableStateFlow(false)
+    val isLoadingMore: StateFlow<Boolean> = _isLoadingMore.asStateFlow()
 
     fun loadMe() {
         viewModelScope.launch {
@@ -81,6 +83,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private suspend fun loadUserMoments(userId: String) {
         try {
+            pageToken = null
+            isLastPage = false
             val response = repository.listUserFeeds(userId, pageToken = null, pageSize = 20)
             _moments.value = response.feeds?.mapNotNull { it.moment } ?: emptyList()
             pageToken = response.nextPageToken
@@ -91,7 +95,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun loadMoreMoments(userId: String) {
-        if (isLastPage) return
+        if (isLastPage || _isLoadingMore.value) return
+        _isLoadingMore.value = true
         viewModelScope.launch {
             try {
                 val response = repository.listUserFeeds(userId, pageToken = pageToken, pageSize = 20)
@@ -101,6 +106,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 isLastPage = response.isLastPage ?: (response.nextPageToken == null)
             } catch (e: Exception) {
                 // 静默
+            } finally {
+                _isLoadingMore.value = false
             }
         }
     }

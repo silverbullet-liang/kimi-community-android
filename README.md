@@ -6,6 +6,8 @@
 
 基于 Kimi 社区 API（kimi_3.1.0）复刻的 Android 客户端，使用 Kotlin + Jetpack Compose (Material 3) 开发。
 
+**GitHub 仓库**：https://github.com/silverbullet-liang/kimi-community-android
+
 ## 功能特性
 
 ### 已实现

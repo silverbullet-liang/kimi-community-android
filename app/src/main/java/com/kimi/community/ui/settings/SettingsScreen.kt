@@ -363,7 +363,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                             .clickable {
                                 context.startActivity(
                                     Intent(context, WebViewActivity::class.java)
-                                        .putExtra("url", "https://github.com/kimi-community/kimi-community-android")
+                                        .putExtra("url", "https://github.com/silverbullet-liang/kimi-community-android")
                                         .putExtra("title", "GitHub 仓库")
                                 )
                             }

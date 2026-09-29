@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kimi.community.ui.components.MomentCard
+import com.kimi.community.ui.create.CreateMomentActivity
 import com.kimi.community.ui.detail.MomentDetailActivity
 import com.kimi.community.ui.profile.UserProfileActivity
 
@@ -60,6 +62,11 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             TopAppBar(
                 title = { Text("社区", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
                 actions = {
+                    IconButton(onClick = {
+                        context.startActivity(Intent(context, CreateMomentActivity::class.java))
+                    }) {
+                        Icon(Icons.Default.Add, contentDescription = "发布")
+                    }
                     IconButton(onClick = { showSearch = true }) {
                         Icon(Icons.Default.Search, contentDescription = "搜索")
                     }

@@ -330,3 +330,282 @@ data class CreateComplaintRequest(
 
 /** CreateComplaintResponse — 空消息 */
 data class CreateComplaintResponse(val ignored: Boolean = true)
+
+// ===== Moment（动态）新增 Requests/Responses =====
+/** CreateMomentRequest — text, title, chatShareId, visibility, artifactShareId, images, mentions, links, hashtagIds */
+data class CreateMomentRequest(
+    @SerializedName("text") val text: String? = null,
+    @SerializedName("title") val title: String? = null,
+    @SerializedName("chatShareId") val chatShareId: String? = null,
+    @SerializedName("visibility") val visibility: String? = null,
+    @SerializedName("artifactShareId") val artifactShareId: String? = null,
+    @SerializedName("images") val images: List<CreateMomentImage>? = null,
+    @SerializedName("mentions") val mentions: List<String>? = null,
+    @SerializedName("links") val links: List<String>? = null,
+    @SerializedName("hashtagIds") val hashtagIds: List<String>? = null
+)
+
+/** CreateMomentImage — fileId, extra */
+data class CreateMomentImage(
+    @SerializedName("fileId") val fileId: String,
+    @SerializedName("extra") val extra: CreateMomentImageExtra? = null
+)
+
+/** CreateMomentImageExtra — width, height */
+data class CreateMomentImageExtra(
+    @SerializedName("width") val width: Int? = null,
+    @SerializedName("height") val height: Int? = null
+)
+
+/** CreateMomentResponse — moment */
+data class CreateMomentResponse(
+    @SerializedName("moment") val moment: Moment? = null
+)
+
+/** DeleteMomentRequest — momentId */
+data class DeleteMomentRequest(
+    @SerializedName("momentId") val momentId: String
+)
+
+/** DeleteMomentResponse — 空消息 */
+data class DeleteMomentResponse(val ignored: Boolean = true)
+
+// ===== UploadService Requests/Responses =====
+object FileType {
+    const val FILE = "FILE_TYPE_FILE"
+    const val IMAGE = "FILE_TYPE_IMAGE"
+}
+
+/** GeneratePresignedURLRequest — fileType */
+data class GeneratePresignedURLRequest(
+    @SerializedName("fileType") val fileType: String = FileType.IMAGE
+)
+
+/** GeneratePresignedURLResponse — uploadUrl, objectName, fileId */
+data class GeneratePresignedURLResponse(
+    @SerializedName("uploadUrl") val uploadUrl: String? = null,
+    @SerializedName("objectName") val objectName: String? = null,
+    @SerializedName("fileId") val fileId: String? = null
+)
+
+/** CreateFileRequest — fileName, fileId, extra */
+data class CreateFileRequest(
+    @SerializedName("fileName") val fileName: String? = null,
+    @SerializedName("fileId") val fileId: String,
+    @SerializedName("extra") val extra: CreateFileImageExtra? = null
+)
+
+/** CreateFileImageExtra — width, height */
+data class CreateFileImageExtra(
+    @SerializedName("width") val width: Int? = null,
+    @SerializedName("height") val height: Int? = null
+)
+
+/** CreateFileResponse — fileId, fileName, size, originUrl, thumbnailUrl, contentType */
+data class CreateFileResponse(
+    @SerializedName("fileId") val fileId: String? = null,
+    @SerializedName("fileName") val fileName: String? = null,
+    @SerializedName("size") val size: Int? = null,
+    @SerializedName("originUrl") val originUrl: String? = null,
+    @SerializedName("thumbnailUrl") val thumbnailUrl: String? = null,
+    @SerializedName("contentType") val contentType: String? = null
+)
+
+// ===== HashtagService Requests/Responses =====
+/** ListHashtagsRequest — pageSize, pageToken */
+data class ListHashtagsRequest(
+    @SerializedName("pageSize") val pageSize: Int = 20,
+    @SerializedName("pageToken") val pageToken: String? = null
+)
+
+/** ListHashtagsResponse — nextPageToken, isLastPage, hashtags */
+data class ListHashtagsResponse(
+    @SerializedName("nextPageToken") val nextPageToken: String? = null,
+    @SerializedName("isLastPage") val isLastPage: Boolean? = null,
+    @SerializedName("hashtags") val hashtags: List<Hashtag>? = null
+)
+
+/** Hashtag — id, name, icon, momentCount, description */
+data class Hashtag(
+    @SerializedName("id") val id: String? = null,
+    @SerializedName("name") val name: String? = null,
+    @SerializedName("icon") val icon: ImageUrl? = null,
+    @SerializedName("momentCount") val momentCount: String? = null,
+    @SerializedName("description") val description: String? = null
+)
+
+/** GetHashtagRequest — hashtagId */
+data class GetHashtagRequest(
+    @SerializedName("hashtagId") val hashtagId: String
+)
+
+/** GetHashtagResponse — hashtag */
+data class GetHashtagResponse(
+    @SerializedName("hashtag") val hashtag: Hashtag? = null
+)
+
+/** RecommendHashtagsResponse — hashtags */
+data class RecommendHashtagsResponse(
+    @SerializedName("hashtags") val hashtags: List<Hashtag>? = null
+)
+
+/** SearchHashtagsRequest — keyword, pageSize, pageToken */
+data class SearchHashtagsRequest(
+    @SerializedName("keyword") val keyword: String,
+    @SerializedName("pageSize") val pageSize: Int = 20,
+    @SerializedName("pageToken") val pageToken: String? = null
+)
+
+/** SearchHashtagsResponse — nextPageToken, isLastPage, hashtags */
+data class SearchHashtagsResponse(
+    @SerializedName("nextPageToken") val nextPageToken: String? = null,
+    @SerializedName("isLastPage") val isLastPage: Boolean? = null,
+    @SerializedName("hashtags") val hashtags: List<Hashtag>? = null
+)
+
+/** SuggestSearchQueryRequest — keyword */
+data class SuggestSearchQueryRequest(
+    @SerializedName("keyword") val keyword: String
+)
+
+/** SuggestSearchQueryResponse — queries */
+data class SuggestSearchQueryResponse(
+    @SerializedName("queries") val queries: List<String>? = null
+)
+
+/** ListHotHashtagsInSearchResponse — hashtags */
+data class ListHotHashtagsInSearchResponse(
+    @SerializedName("hashtags") val hashtags: List<Hashtag>? = null
+)
+
+// ===== FollowService 新增 Requests/Responses =====
+/** ListFollowsRequest — userId, followType(FOLLOW_TYPE_FOLLOW/FOLLOWER), pageSize, pageToken */
+data class ListFollowsRequest(
+    @SerializedName("userId") val userId: String,
+    @SerializedName("followType") val followType: String,
+    @SerializedName("pageSize") val pageSize: Int = 20,
+    @SerializedName("pageToken") val pageToken: String? = null
+)
+
+object FollowType {
+    const val FOLLOW = "FOLLOW_TYPE_FOLLOW"
+    const val FOLLOWER = "FOLLOW_TYPE_FOLLOWER"
+}
+
+/** ListFollowsResponse — nextPageToken, isLastPage, users */
+data class ListFollowsResponse(
+    @SerializedName("nextPageToken") val nextPageToken: String? = null,
+    @SerializedName("isLastPage") val isLastPage: Boolean? = null,
+    @SerializedName("users") val users: List<UserBase>? = null
+)
+
+// ===== FeedService 新增 Requests/Responses =====
+/** ListFollowUnreadResponse — unreadCount, moments */
+data class ListFollowUnreadResponse(
+    @SerializedName("unreadCount") val unreadCount: Int? = null,
+    @SerializedName("moments") val moments: List<Moment>? = null
+)
+
+/** MarkReadForFollowRequest — momentIds */
+data class MarkReadForFollowRequest(
+    @SerializedName("momentIds") val momentIds: List<String>? = null
+)
+
+/** MarkReadForFollowResponse — 空消息 */
+data class MarkReadForFollowResponse(val ignored: Boolean = true)
+
+// ===== NotificationService 新增 Requests/Responses =====
+/** GetReminderStatusResponse — hasUnread */
+data class GetReminderStatusResponse(
+    @SerializedName("hasUnread") val hasUnread: Boolean? = null
+)
+
+/** ListRemindersRequest — pageSize, pageToken */
+data class ListRemindersRequest(
+    @SerializedName("pageSize") val pageSize: Int = 20,
+    @SerializedName("pageToken") val pageToken: String? = null
+)
+
+/** ListRemindersResponse — nextPageToken, isLastPage, reminders */
+data class ListRemindersResponse(
+    @SerializedName("nextPageToken") val nextPageToken: String? = null,
+    @SerializedName("isLastPage") val isLastPage: Boolean? = null,
+    @SerializedName("reminders") val reminders: List<Reminder>? = null
+)
+
+/** Reminder — id, type, content, createTime, isRead */
+data class Reminder(
+    @SerializedName("id") val id: String? = null,
+    @SerializedName("type") val type: String? = null,
+    @SerializedName("content") val content: String? = null,
+    @SerializedName("createTime") val createTime: String? = null,
+    @SerializedName("isRead") val isRead: Boolean? = null
+)
+
+/** MarkReadForReminderRequest — reminderIds */
+data class MarkReadForReminderRequest(
+    @SerializedName("reminderIds") val reminderIds: List<String>? = null
+)
+
+/** MarkReadForReminderResponse — 空消息 */
+data class MarkReadForReminderResponse(val ignored: Boolean = true)
+
+// ===== MuteService 新增 Requests/Responses =====
+/** UnMuteRequest — objectType, objectId */
+data class UnMuteRequest(
+    @SerializedName("objectType") val objectType: String,
+    @SerializedName("objectId") val objectId: String
+)
+
+/** UnMuteResponse — msg */
+data class UnMuteResponse(
+    @SerializedName("msg") val msg: String? = null
+)
+
+/** ListMuteReasonsResponse — reasons */
+data class ListMuteReasonsResponse(
+    @SerializedName("reasons") val reasons: List<MuteReason>? = null
+)
+
+/** MuteReason — id, name */
+data class MuteReason(
+    @SerializedName("id") val id: String? = null,
+    @SerializedName("name") val name: String? = null
+)
+
+/** AppendMuteReasonsRequest — reasons */
+data class AppendMuteReasonsRequest(
+    @SerializedName("reasons") val reasons: List<String>? = null
+)
+
+/** AppendMuteReasonsResponse — 空消息 */
+data class AppendMuteReasonsResponse(val ignored: Boolean = true)
+
+// ===== MomentService 新增 Requests/Responses =====
+/** ListMomentAskKimiQuestionsRequest — momentId, pageSize, pageToken */
+data class ListMomentAskKimiQuestionsRequest(
+    @SerializedName("momentId") val momentId: String,
+    @SerializedName("pageSize") val pageSize: Int = 20,
+    @SerializedName("pageToken") val pageToken: String? = null
+)
+
+/** ListMomentAskKimiQuestionsResponse — nextPageToken, isLastPage, questions */
+data class ListMomentAskKimiQuestionsResponse(
+    @SerializedName("nextPageToken") val nextPageToken: String? = null,
+    @SerializedName("isLastPage") val isLastPage: Boolean? = null,
+    @SerializedName("questions") val questions: List<AskKimiQuestion>? = null
+)
+
+// ===== ConfigService Requests/Responses =====
+/** GetConfigResponse — config */
+data class GetConfigResponse(
+    @SerializedName("config") val config: CommunityConfig? = null
+)
+
+/** CommunityConfig — various config fields */
+data class CommunityConfig(
+    @SerializedName("enableMoment") val enableMoment: Boolean? = null,
+    @SerializedName("enableComment") val enableComment: Boolean? = null,
+    @SerializedName("maxImageCount") val maxImageCount: Int? = null,
+    @SerializedName("maxTextLength") val maxTextLength: Int? = null
+)
